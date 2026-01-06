@@ -1,4 +1,3 @@
-# ISP-system
 # Internet Subscription & Billing Management System
 
 ## Project Overview
