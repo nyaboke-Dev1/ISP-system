@@ -1,0 +1,72 @@
+{% load static %}
+<header class="w-full z-20 top-0 start-0">
+  <!-- TOP NAV -->
+  <nav class="bg-slate-800 w-full">
+    <div class="flex flex-wrap justify-between items-center p-4 w-full">
+      <div class="flex items-center space-x-3 rtl:space-x-reverse">
+        <img
+          src="{% static 'calorieApp/images/calorieTracker logo.png' %}"
+          class="h-7"
+          alt="CalorieTrackerLogo"
+        />
+        <span
+          class="self-center text-xl text-heading font-semibold whitespace-nowrap text-green-700"
+        >
+          CalorieTracker
+        </span>
+      </div>
+
+      <div class="flex items-center space-x-6 rtl:space-x-reverse">
+        <ul
+          class="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-sm"
+        >
+          <li>
+            <a href="{% url 'index' %}" class="text-orange-600 text-heading hover:underline"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="{% url 'add_food' %}"
+              class="text-orange-600 text-heading hover:underline"
+              >Add Food-item</a
+            >
+          </li>
+          <li>
+            <a href="{% url 'food_list' %}" class="text-orange-600 text-heading hover:underline"
+              >Foods List</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bg-neutral-secondary-soft border-y border-default w-full">
+    <div class="px-4 py-3 text-center w-full">
+      <p class="text-green-900">DIET & WEIGHT MANAGEMENT</p>
+      <br />
+      <h4 class="font-bold text-5xl">Food Calculator</h4>
+      <br />
+      <div class="flex items-center justify-center gap-4">
+        <img
+          src="{% static 'calorieApp/images/cake.png' %}"
+          class="h-8 w-8 mr-2"
+        />
+        <img
+          src="{% static 'calorieApp/images/cucumber.png' %}"
+          class="h-8 w-8 mr-2"
+        />
+        <img
+          src="{% static 'calorieApp/images/pizza.png' %}"
+          class="h-8 w-8 mr-2"
+        />
+        <img
+          src="{% static 'calorieApp/images/rice.png' %}"
+          class="h-8 w-8 mr-2"
+        />
+      </div>
+    </div>
+  </nav>
+</header>
