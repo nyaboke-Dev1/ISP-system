@@ -1,0 +1,165 @@
+{% extends 'base.html' %} {% block title %}Upgrade Plan - SpeedNet ISP{%
+endblock %} {% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">Upgrade Your Plan</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-arrow-up-circle"></i> Plan Upgrade Confirmation
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <!-- Current Plan -->
+            <div class="col-md-5">
+              <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                  <h6 class="mb-0">Current Plan</h6>
+                </div>
+                <div class="card-body">
+                  <h5>{{ current_subscription.package.name }}</h5>
+                  <p class="text-muted mb-1">
+                    {{ current_subscription.package.speed_display }}
+                  </p>
+                  <p class="mb-1">
+                    Data Cap: {{ current_subscription.package.data_cap_display
+                    }}
+                  </p>
+                  <p class="mb-0">
+                    <strong
+                      >KES {{ current_subscription.package.price
+                      }}/month</strong
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upgrade Arrow -->
+            <div
+              class="col-md-2 text-center d-flex align-items-center justify-content-center"
+            >
+              <i
+                class="bi bi-arrow-right text-primary"
+                style="font-size: 2rem"
+              ></i>
+            </div>
+
+            <!-- New Plan -->
+            <div class="col-md-5">
+              <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                  <h6 class="mb-0">New Plan</h6>
+                </div>
+                <div class="card-body">
+                  <h5>{{ new_plan.name }}</h5>
+                  <p class="text-muted mb-1">{{ new_plan.speed_display }}</p>
+                  <p class="mb-1">Data Cap: {{ new_plan.data_cap_display }}</p>
+                  <p class="mb-0">
+                    <strong>KES {{ new_plan.price }}/month</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upgrade Details -->
+          <div class="mt-4">
+            <h6>Upgrade Summary:</h6>
+            <div class="row">
+              <div class="col-md-6">
+                <ul class="list-unstyled">
+                  <li>
+                    <strong>Price Difference:</strong>
+                    {% if price_difference > 0 %}
+                    <span class="text-success"
+                      >+KES {{ price_difference }}</span
+                    >
+                    {% else %}
+                    <span class="text-danger">KES {{ price_difference }}</span>
+                    {% endif %}
+                  </li>
+                  <li>
+                    <strong>Speed Change:</strong>
+                    {% if new_plan.speed > current_subscription.package.speed %}
+                    <span class="text-success"
+                      >{{ new_plan.speed }} Mbps (↑)</span
+                    >
+                    {% else %}
+                    <span class="text-warning"
+                      >{{ new_plan.speed }} Mbps (↓)</span
+                    >
+                    {% endif %}
+                  </li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <ul class="list-unstyled">
+                  <li>
+                    <strong>Data Cap Change:</strong>
+                    {% if new_plan.data_cap and
+                    current_subscription.package.data_cap %} {% if
+                    new_plan.data_cap > current_subscription.package.data_cap %}
+                    <span class="text-success"
+                      >{{ new_plan.data_cap }} GB (↑)</span
+                    >
+                    {% else %}
+                    <span class="text-warning"
+                      >{{ new_plan.data_cap }} GB (↓)</span
+                    >
+                    {% endif %} {% elif new_plan.data_cap %}
+                    <span class="text-success"
+                      >{{ new_plan.data_cap }} GB (New)</span
+                    >
+                    {% else %}
+                    <span class="text-info">Unlimited (↑)</span>
+                    {% endif %}
+                  </li>
+                  <li><strong>Effective:</strong> Immediately</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Confirmation Form -->
+          <div class="mt-4 p-3 bg-light rounded">
+            <h6>
+              <i class="bi bi-exclamation-triangle text-warning"></i> Important
+              Notes:
+            </h6>
+            <ul class="mb-0">
+              <li>Your current subscription will be cancelled</li>
+              <li>The upgrade takes effect immediately</li>
+              <li>Any remaining days on your current plan will be forfeited</li>
+              <li>You will be charged the new plan's rate starting today</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <form method="post">
+            {% csrf_token %}
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle"></i> Confirm Upgrade
+              </button>
+              <a
+                href="{% url 'subscriptions:my_subscription' %}"
+                class="btn btn-outline-secondary"
+              >
+                <i class="bi bi-x-circle"></i> Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

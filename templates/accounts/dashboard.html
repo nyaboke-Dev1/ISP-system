@@ -1,0 +1,193 @@
+{% extends 'base.html' %} {% block title %}Dashboard - SpeedNet ISP{% endblock
+%} {% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">
+        Welcome back, {{ user.first_name|default:user.username }}!
+      </h1>
+    </div>
+  </div>
+
+  <!-- Subscription Status -->
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-wifi"></i> Current Subscription</h5>
+        </div>
+        <div class="card-body">
+          {% if subscription %}
+          <div class="row">
+            <div class="col-md-6">
+              <h6>{{ subscription.package.name }}</h6>
+              <p class="text-muted mb-1">
+                {{ subscription.package.speed_display }}
+              </p>
+              <p class="mb-0">
+                <strong>${{ subscription.package.price }}/month</strong>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p class="mb-1">
+                <strong>Status:</strong>
+                <span
+                  class="badge {% if subscription.status == 'active' %}bg-success{% else %}bg-warning{% endif %}"
+                >
+                  {{ subscription.get_status_display }}
+                </span>
+              </p>
+              <p class="mb-1">
+                <strong>Next Billing:</strong> {{
+                subscription.next_billing_date|date:"M d, Y" }}
+              </p>
+              {% if subscription.package.data_cap %}
+              <p class="mb-0">
+                <strong>Data Cap:</strong> {{
+                subscription.package.data_cap_display }}
+              </p>
+              {% endif %}
+            </div>
+          </div>
+          {% else %}
+          <p class="text-muted mb-0">No active subscription found.</p>
+          <a href="{% url 'packages:plans_list' %}" class="btn btn-primary mt-2"
+            >Browse Plans</a
+          >
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Usage Summary -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Usage This Month</h5>
+        </div>
+        <div class="card-body">
+          {% if data_cap %}
+          <div class="mb-3">
+            <div class="d-flex justify-content-between">
+              <span>Used</span>
+              <span>{{ total_usage_gb }} GB / {{ data_cap }} GB</span>
+            </div>
+            <div class="progress">
+              <div
+                class="progress-bar {% if usage_percentage > 80 %}bg-danger{% elif usage_percentage > 60 %}bg-warning{% else %}bg-success{% endif %}"
+                style="width: {{ usage_percentage }}%"
+              ></div>
+            </div>
+          </div>
+          <p class="text-center mb-0">
+            {{ usage_percentage|floatformat:1 }}% used
+          </p>
+          {% else %}
+          <p class="text-center mb-0">{{ total_usage_gb }} GB used</p>
+          <p class="text-muted small">Unlimited plan</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Payments -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0"><i class="bi bi-receipt"></i> Recent Payments</h5>
+          <a
+            href="{% url 'payments:payments_list' %}"
+            class="btn btn-sm btn-outline-primary"
+            >View All</a
+          >
+        </div>
+        <div class="card-body">
+          {% if recent_payments %}
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for payment in recent_payments %}
+                <tr>
+                  <td>{{ payment.timestamp|date:"M d, Y" }}</td>
+                  <td>${{ payment.amount }}</td>
+                  <td>{{ payment.get_method_display }}</td>
+                  <td>
+                    <span
+                      class="badge {% if payment.status == 'completed' %}bg-success{% elif payment.status == 'pending' %}bg-warning{% else %}bg-danger{% endif %}"
+                    >
+                      {{ payment.get_status_display }}
+                    </span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <p class="text-muted mb-0">No payments found.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-gear"></i> Quick Actions</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <a
+                href="{% url 'accounts:profile' %}"
+                class="btn btn-outline-primary w-100"
+              >
+                <i class="bi bi-person"></i><br />Update Profile
+              </a>
+            </div>
+            <div class="col-md-3">
+              <a
+                href="{% url 'subscriptions:my_subscription' %}"
+                class="btn btn-outline-success w-100"
+              >
+                <i class="bi bi-card-list"></i><br />Manage Subscription
+              </a>
+            </div>
+            <div class="col-md-3">
+              <a
+                href="{% url 'accounts:create_ticket' %}"
+                class="btn btn-outline-warning w-100"
+              >
+                <i class="bi bi-headset"></i><br />Support Ticket
+              </a>
+            </div>
+            <div class="col-md-3">
+              <a
+                href="{% url 'reports:usage_report' %}"
+                class="btn btn-outline-info w-100"
+              >
+                <i class="bi bi-bar-chart"></i><br />Usage Report
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html' %} {% block title %}Internet Plans - SpeedNet ISP{%
+endblock %} {% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="text-center mb-4">Choose Your Internet Plan</h1>
+      <p class="text-center text-muted mb-5">
+        Select the perfect plan for your connectivity needs
+      </p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    {% for plan in plans %}
+    <div class="col-lg-4 col-md-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="card-title mb-0">{{ plan.name }}</h5>
+          <small class="text-primary-emphasis"
+            >{{ plan.get_plan_type_display }}</small
+          >
+        </div>
+        <div class="card-body">
+          <div class="text-center mb-3">
+            <h3 class="text-primary">KES {{ plan.price }}</h3>
+            <small class="text-muted">per month</small>
+          </div>
+
+          <div class="mb-3">
+            <div class="d-flex align-items-center mb-2">
+              <i class="bi bi-speedometer2 text-primary me-2"></i>
+              <span>{{ plan.speed_display }}</span>
+            </div>
+            <div class="d-flex align-items-center mb-2">
+              <i class="bi bi-database text-primary me-2"></i>
+              <span>{{ plan.data_cap_display }}</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <i class="bi bi-calendar text-primary me-2"></i>
+              <span>{{ plan.duration }} days billing cycle</span>
+            </div>
+          </div>
+
+          {% if plan.description %}
+          <p class="text-muted small">{{ plan.description }}</p>
+          {% endif %} {% if plan.setup_fee %}
+          <p class="text-muted small">Setup fee: KES {{ plan.setup_fee }}</p>
+          {% endif %}
+        </div>
+        <div class="card-footer bg-transparent">
+          {% if user.is_authenticated %} {% if has_active_subscription %}
+          <button class="btn btn-secondary w-100" disabled>
+            Already Subscribed
+          </button>
+          {% else %}
+          <a
+            href="{% url 'subscriptions:subscribe' plan.id %}"
+            class="btn btn-primary w-100"
+          >
+            Subscribe Now
+          </a>
+          {% endif %} {% else %} {% url 'subscriptions:subscribe' plan.id as
+          subscribe_url %}
+          <a
+            href="{% url 'accounts:login' %}?next={{ subscribe_url }}"
+            class="btn btn-primary w-100"
+          >
+            Login to Subscribe
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="alert alert-info text-center">
+        <h5>No plans available</h5>
+        <p>Please check back later for available internet plans.</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if user.is_authenticated %}
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5>Need help choosing a plan?</h5>
+          <p class="text-muted">
+            Contact our support team for personalized recommendations.
+          </p>
+          <a
+            href="{% url 'accounts:create_ticket' %}"
+            class="btn btn-outline-primary"
+          >
+            <i class="bi bi-headset"></i> Contact Support
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'base.html' %} {% block title %}Usage Report - SpeedNet ISP{%
+endblock %} {% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">Usage Report</h1>
+    </div>
+  </div>
+
+  <!-- Usage Summary -->
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-bar-chart"></i> Monthly Usage Summary
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col-md-4">
+              <div class="p-3 bg-primary bg-opacity-10 rounded">
+                <h4 class="text-primary">{{ total_download_gb }} GB</h4>
+                <small class="text-muted">Download</small>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 bg-success bg-opacity-10 rounded">
+                <h4 class="text-success">{{ total_upload_gb }} GB</h4>
+                <small class="text-muted">Upload</small>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 bg-info bg-opacity-10 rounded">
+                <h4 class="text-info">{{ total_gb }} GB</h4>
+                <small class="text-muted">Total</small>
+              </div>
+            </div>
+          </div>
+
+          {% if subscription and subscription.package.data_cap %}
+          <div class="mt-4">
+            <h6>Data Cap Usage</h6>
+            <div class="progress">
+              {% widthratio total_gb subscription.package.data_cap 100 as
+              usage_percentage %}
+              <div
+                class="progress-bar {% if usage_percentage > 80 %}bg-danger{% elif usage_percentage > 60 %}bg-warning{% else %}bg-success{% endif %}"
+                style="width: {{ usage_percentage }}%"
+              ></div>
+            </div>
+            <p class="text-center mt-2">
+              {{ total_gb }} GB used of {{ subscription.package.data_cap }} GB
+              ({{ usage_percentage|floatformat:1 }}%)
+            </p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-info-circle"></i> Plan Details</h5>
+        </div>
+        <div class="card-body">
+          {% if subscription %}
+          <h6>{{ subscription.package.name }}</h6>
+          <p class="mb-1">{{ subscription.package.speed_display }}</p>
+          <p class="mb-1">
+            Data Cap: {{ subscription.package.data_cap_display }}
+          </p>
+          <p class="mb-0">
+            Status:
+            <span
+              class="badge {% if subscription.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}"
+            >
+              {{ subscription.get_status_display }}
+            </span>
+          </p>
+          {% else %}
+          <p class="text-muted">No active subscription</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usage Records Table -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">
+            <i class="bi bi-table"></i> Daily Usage Breakdown
+          </h5>
+          <a
+            href="{% url 'reports:export_usage' %}"
+            class="btn btn-sm btn-outline-primary"
+          >
+            <i class="bi bi-download"></i> Export CSV
+          </a>
+        </div>
+        <div class="card-body">
+          {% if usage_records %}
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Download (GB)</th>
+                  <th>Upload (GB)</th>
+                  <th>Total (GB)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for record in usage_records %}
+                <tr>
+                  <td>{{ record.date|date:"M d, Y" }}</td>
+                  <td>{{ record.download_gb|floatformat:2 }}</td>
+                  <td>{{ record.upload_gb|floatformat:2 }}</td>
+                  <td><strong>{{ record.total_gb|floatformat:2 }}</strong></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="alert alert-info">
+            <h5><i class="bi bi-info-circle"></i> No Usage Data</h5>
+            <p>
+              Usage tracking is not currently available. This feature will be
+              implemented soon.
+            </p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usage Tips -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Usage Tips</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>Monitor Your Usage</h6>
+              <ul>
+                <li>Check your usage regularly to avoid exceeding data caps</li>
+                <li>Set up usage alerts for better control</li>
+                <li>
+                  Consider upgrading your plan if you consistently exceed limits
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <h6>Optimize Your Connection</h6>
+              <ul>
+                <li>Close unused applications and downloads</li>
+                <li>Use wired connection when possible for better speeds</li>
+                <li>Schedule large downloads during off-peak hours</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

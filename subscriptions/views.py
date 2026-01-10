@@ -11,109 +11,116 @@ from packages.models import Package
 def my_subscription(request):
     """View current subscription"""
     # Get all subscriptions
-    subscriptions = request.user.subscriptions.all().order_by('-created_at')
-    
+    subscriptions = request.user.subscriptions.all().order_by("-created_at")
+
     # Get active subscription
-    active_subscription = subscriptions.filter(is_active=True).first()
-    
+    active_subscription = subscriptions.filter(status="active").first()
+
     # Get available plans for upgrade
     available_plans = Package.objects.filter(is_active=True)
-    
+
     context = {
-        'subscriptions': subscriptions,
-        'active_subscription': active_subscription,
-        'available_plans': available_plans,
+        "subscriptions": subscriptions,
+        "active_subscription": active_subscription,
+        "available_plans": available_plans,
     }
-    
-    return render(request, 'subscriptions/my_subscription.html', context)
+
+    return render(request, "subscriptions/my_subscription.html", context)
 
 
 @login_required
 def subscribe(request, plan_id):
     """Subscribe to a plan"""
     plan = get_object_or_404(Package, id=plan_id, is_active=True)
-    
+
     # Check if user already has active subscription
-    has_active = request.user.subscriptions.filter(is_active=True).exists()
-    
+    has_active = request.user.subscriptions.filter(status="active").exists()
+
     if has_active:
-        messages.warning(request, 'You already have an active subscription. Please cancel it first.')
-        return redirect('subscriptions:my_subscription')
-    
-    if request.method == 'POST':
+        messages.warning(
+            request, "You already have an active subscription. Please cancel it first."
+        )
+        return redirect("subscriptions:my_subscription")
+
+    if request.method == "POST":
         # Create subscription
         subscription = Subscription.objects.create(
             user=request.user,
             package=plan,
             start_date=timezone.now(),
-            is_active=False,  # Will be activated after payment
-            status='pending'
+            status="pending",  # Will be activated after payment
+            next_billing_date=timezone.now() + timedelta(days=plan.duration),
         )
-        
-        messages.success(request, f'Subscription to {plan.name} created! Please complete payment.')
-        return redirect('payments:pay_invoice', invoice_id=subscription.id)  # Or wherever you handle payment
-    
+
+        messages.success(
+            request, f"Subscription to {plan.name} created! Please complete payment."
+        )
+        return redirect(
+            "payments:pay_invoice", invoice_id=subscription.id
+        )  # Or wherever you handle payment
+
     context = {
-        'plan': plan,
+        "plan": plan,
     }
-    return render(request, 'subscriptions/subscribe.html', context)
+    return render(request, "subscriptions/subscribe.html", context)
 
 
 @login_required
 def upgrade_plan(request, plan_id):
     """Upgrade to a different plan"""
     new_plan = get_object_or_404(Package, id=plan_id, is_active=True)
-    
+
     # Get current active subscription
-    current_subscription = request.user.subscriptions.filter(is_active=True).first()
-    
+    current_subscription = request.user.subscriptions.filter(status="active").first()
+
     if not current_subscription:
-        messages.error(request, 'You need an active subscription first.')
-        return redirect('packages:plans_list')
-    
-    if request.method == 'POST':
+        messages.error(request, "You need an active subscription first.")
+        return redirect("packages:plans_list")
+
+    if request.method == "POST":
         # Cancel current subscription
-        current_subscription.is_active = False
-        current_subscription.status = 'cancelled'
+        current_subscription.status = "cancelled"
         current_subscription.save()
-        
+
         # Create new subscription
         new_subscription = Subscription.objects.create(
             user=request.user,
             package=new_plan,
             start_date=timezone.now(),
-            is_active=True,
-            status='active'
+            status="active",
+            next_billing_date=timezone.now() + timedelta(days=new_plan.duration),
         )
-        
-        messages.success(request, f'Successfully upgraded to {new_plan.name}!')
-        return redirect('subscriptions:my_subscription')
-    
+
+        messages.success(request, f"Successfully upgraded to {new_plan.name}!")
+        return redirect("subscriptions:my_subscription")
+
     context = {
-        'new_plan': new_plan,
-        'current_subscription': current_subscription,
+        "new_plan": new_plan,
+        "current_subscription": current_subscription,
+        "price_difference": new_plan.price - current_subscription.package.price,
     }
-    
-    return render(request, 'subscriptions/upgrade_plan.html', context)
+
+    return render(request, "subscriptions/upgrade.html", context)
 
 
 @login_required
 def cancel_subscription(request):
     """Cancel active subscription"""
-    active_subscription = request.user.subscriptions.filter(is_active=True).first()
-    
+    active_subscription = request.user.subscriptions.filter(status="active").first()
+
     if not active_subscription:
-        messages.error(request, 'No active subscription to cancel.')
-        return redirect('subscriptions:my_subscription')
-    
-    if request.method == 'POST':
-        active_subscription.is_active = False
-        active_subscription.status = 'cancelled'
+        messages.error(request, "No active subscription to cancel.")
+        return redirect("subscriptions:my_subscription")
+
+    if request.method == "POST":
+        active_subscription.status = "cancelled"
         active_subscription.save()
-        
-        messages.success(request, 'Subscription cancelled successfully.')
-        return redirect('subscriptions:my_subscription')
-    
-    return render(request, 'subscriptions/cancel_subscription.html', {
-        'subscription': active_subscription
-    })
+
+        messages.success(request, "Subscription cancelled successfully.")
+        return redirect("subscriptions:my_subscription")
+
+    return render(
+        request,
+        "subscriptions/cancel_subscription.html",
+        {"subscription": active_subscription},
+    )

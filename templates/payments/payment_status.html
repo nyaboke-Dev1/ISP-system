@@ -1,0 +1,168 @@
+{% extends 'base.html' %} {% block title %}Payment Status - SpeedNet ISP{%
+endblock %} {% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header bg-info text-white">
+          <h4 class="mb-0"><i class="bi bi-clock"></i> Payment Status</h4>
+        </div>
+        <div class="card-body text-center">
+          {% if payment.status == 'processing' %}
+          <!-- Processing Status -->
+          <div class="mb-4">
+            <div
+              class="spinner-border text-primary"
+              role="status"
+              style="width: 3rem; height: 3rem"
+            >
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <h5 class="text-primary">Processing Payment...</h5>
+          <p class="text-muted">
+            Please check your phone and enter your M-Pesa PIN to complete the
+            payment.
+          </p>
+
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            <strong>Payment Details:</strong>
+            <ul class="mb-0 mt-2 text-start">
+              <li>Amount: <strong>KES {{ payment.amount }}</strong></li>
+              <li>Phone: <strong>{{ payment.phone_number }}</strong></li>
+              <li>
+                Plan: <strong>{{ payment.subscription.package.name }}</strong>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-4">
+            <p class="text-muted small">
+              This page will automatically update when payment is confirmed.
+            </p>
+            <a
+              href="{% url 'accounts:dashboard' %}"
+              class="btn btn-outline-secondary"
+            >
+              <i class="bi bi-house"></i> Go to Dashboard
+            </a>
+          </div>
+
+          {% elif payment.status == 'completed' %}
+          <!-- Success Status -->
+          <div class="mb-4">
+            <i
+              class="bi bi-check-circle text-success"
+              style="font-size: 4rem"
+            ></i>
+          </div>
+          <h5 class="text-success">Payment Successful!</h5>
+          <p class="text-muted">Your subscription has been activated.</p>
+
+          <div class="alert alert-success">
+            <strong>Payment Details:</strong>
+            <ul class="mb-0 mt-2 text-start">
+              <li>
+                Receipt: <strong>{{ payment.mpesa_receipt_number }}</strong>
+              </li>
+              <li>Amount: <strong>KES {{ payment.amount }}</strong></li>
+              <li>
+                Plan: <strong>{{ payment.subscription.package.name }}</strong>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-4">
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-success">
+              <i class="bi bi-house"></i> Go to Dashboard
+            </a>
+            <a
+              href="{% url 'subscriptions:my_subscription' %}"
+              class="btn btn-outline-primary ms-2"
+            >
+              <i class="bi bi-card-list"></i> View Subscription
+            </a>
+          </div>
+
+          {% elif payment.status == 'failed' %}
+          <!-- Failed Status -->
+          <div class="mb-4">
+            <i class="bi bi-x-circle text-danger" style="font-size: 4rem"></i>
+          </div>
+          <h5 class="text-danger">Payment Failed</h5>
+          <p class="text-muted">The payment could not be processed.</p>
+
+          <div class="alert alert-danger">
+            <strong>Payment Details:</strong>
+            <ul class="mb-0 mt-2 text-start">
+              <li>Amount: <strong>KES {{ payment.amount }}</strong></li>
+              <li>Phone: <strong>{{ payment.phone_number }}</strong></li>
+              <li>
+                Plan: <strong>{{ payment.subscription.package.name }}</strong>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-4">
+            <a
+              href="{% url 'payments:pay_invoice' payment.subscription.id %}"
+              class="btn btn-primary"
+            >
+              <i class="bi bi-arrow-repeat"></i> Try Again
+            </a>
+            <a
+              href="{% url 'accounts:dashboard' %}"
+              class="btn btn-outline-secondary ms-2"
+            >
+              <i class="bi bi-house"></i> Go to Dashboard
+            </a>
+          </div>
+
+          {% else %}
+          <!-- Unknown Status -->
+          <div class="mb-4">
+            <i
+              class="bi bi-question-circle text-warning"
+              style="font-size: 4rem"
+            ></i>
+          </div>
+          <h5 class="text-warning">Payment Status Unknown</h5>
+          <p class="text-muted">
+            Please contact support if you have any questions.
+          </p>
+
+          <div class="mt-4">
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-primary">
+              <i class="bi bi-house"></i> Go to Dashboard
+            </a>
+            <a
+              href="{% url 'accounts:create_ticket' %}"
+              class="btn btn-outline-secondary ms-2"
+            >
+              <i class="bi bi-headset"></i> Contact Support
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if payment.status == 'processing' %}
+<script>
+  // Auto-refresh payment status every 10 seconds
+  setInterval(function () {
+    fetch('{% url "payments:check_payment_status" payment.id %}')
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status !== "processing") {
+          // Reload page to show updated status
+          window.location.reload();
+        }
+      })
+      .catch((error) => console.log("Error checking payment status:", error));
+  }, 10000);
+</script>
+{% endif %} {% endblock %}

@@ -1,220 +1,266 @@
-{% extends 'base.html' %}
-
-{% block title %}Home - SpeedNet ISP{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Home - SpeedNet ISP{% endblock %} {%
+block content %}
 <!-- Hero Section with exact layout -->
 <div class="hero-section">
-    <div class="container">
-        <!-- Top Bar with Logo and Auth Buttons -->
-        <div class="hero-header">
-            <div class="d-flex justify-content-between align-items-center py-3">
-                <div class="logo-section">
-                    <h2 class="mb-0">
-                        <span class="home-icon">🏠</span> 
-                        <span class="brand-text">SpeedNet ISP</span>
-                    </h2>
-                </div>
-                <div class="auth-buttons">
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-light me-2">Dashboard</a>
-                        <form method="post" action="{% url 'accounts:logout' %}" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-light">Logout</button>
-                        </form>
-                    {% else %}
-                        <a href="{% url 'accounts:login' %}" class="btn btn-outline-light me-2">Login</a>
-                        <a href="{% url 'accounts:signup' %}" class="btn btn-light">Sign Up</a>
-                    {% endif %}
-                </div>
-            </div>
+  <div class="container">
+    <!-- Top Bar with Logo and Auth Buttons -->
+    <div class="hero-header">
+      <div class="d-flex justify-content-between align-items-center py-3">
+        <div class="logo-section">
+          <h2 class="mb-0">
+            <span class="home-icon">🏠</span>
+            <span class="brand-text">SpeedNet ISP</span>
+          </h2>
         </div>
-
-        <hr class="hero-divider">
-
-        <!-- Main Hero Content -->
-        <div class="hero-content text-center py-5">
-            <div class="hero-icon mb-3">⚡</div>
-            <h1 class="hero-title mb-3">Lightning Fast Internet</h1>
-            <p class="hero-subtitle mb-4">Connect to Your World</p>
-            
-            <div class="hero-buttons">
-                <a href="{% url 'packages:plans_list' %}" class="btn btn-hero btn-primary me-3">View Plans</a>
-                <a href="#contact" class="btn btn-hero btn-outline-light">Contact Us</a>
-            </div>
+        <div class="auth-buttons">
+          {% if user.is_authenticated %}
+          <a
+            href="{% url 'accounts:dashboard' %}"
+            class="btn btn-outline-light me-2"
+            >Dashboard</a
+          >
+          <form
+            method="post"
+            action="{% url 'accounts:logout' %}"
+            style="display: inline"
+          >
+            {% csrf_token %}
+            <button type="submit" class="btn btn-light">Logout</button>
+          </form>
+          {% else %}
+          <a
+            href="{% url 'accounts:login' %}"
+            class="btn btn-outline-light me-2"
+            >Login</a
+          >
+          <a href="{% url 'accounts:signup' %}" class="btn btn-light"
+            >Sign Up</a
+          >
+          {% endif %}
         </div>
-
-        <hr class="hero-divider">
-
-        <!-- Why Choose Us Section -->
-        <div class="features-grid py-4">
-            <h3 class="features-title mb-4">Why Choose Us?</h3>
-            <div class="row g-4">
-                <div class="col-md-3 col-6">
-                    <div class="feature-item">
-                        <span class="check-icon">✓</span>
-                        <span class="feature-text">99.9% Uptime</span>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="feature-item">
-                        <span class="check-icon">✓</span>
-                        <span class="feature-text">24/7 Support</span>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="feature-item">
-                        <span class="check-icon">✓</span>
-                        <span class="feature-text">No Data Caps</span>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="feature-item">
-                        <span class="check-icon">✓</span>
-                        <span class="feature-text">Easy Setup</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+
+    <hr class="hero-divider" />
+
+    <!-- Main Hero Content -->
+    <div class="hero-content text-center py-5">
+      <div class="hero-icon mb-3">⚡</div>
+      <h1 class="hero-title mb-3">Lightning Fast Internet</h1>
+      <p class="hero-subtitle mb-4">Connect to Your World</p>
+
+      <div class="hero-buttons">
+        <a
+          href="{% url 'packages:plans_list' %}"
+          class="btn btn-hero btn-primary me-3"
+          >View Plans</a
+        >
+        <a href="#contact" class="btn btn-hero btn-outline-light">Contact Us</a>
+      </div>
+    </div>
+
+    <hr class="hero-divider" />
+
+    <!-- Why Choose Us Section -->
+    <div class="features-grid py-4">
+      <h3 class="features-title mb-4">Why Choose Us?</h3>
+      <div class="row g-4">
+        <div class="col-md-3 col-6">
+          <div class="feature-item">
+            <span class="check-icon">✓</span>
+            <span class="feature-text">99.9% Uptime</span>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="feature-item">
+            <span class="check-icon">✓</span>
+            <span class="feature-text">24/7 Support</span>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="feature-item">
+            <span class="check-icon">✓</span>
+            <span class="feature-text">No Data Caps</span>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="feature-item">
+            <span class="check-icon">✓</span>
+            <span class="feature-text">Easy Setup</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Additional Sections (Optional - can be styled separately) -->
 <div class="container my-5">
-    <!-- Featured Plans Preview -->
-    <div class="text-center mb-5">
-        <h2 class="section-title">Our Popular Plans</h2>
-        <p class="text-muted">Choose the perfect internet plan for your needs</p>
+  <!-- Featured Plans Preview -->
+  <div class="text-center mb-5">
+    <h2 class="section-title">Our Popular Plans</h2>
+    <p class="text-muted">Choose the perfect internet plan for your needs</p>
+  </div>
+
+  <div class="row g-4 mb-5">
+    <!-- Basic Plan -->
+    <div class="col-md-4">
+      <div class="plan-card">
+        <div class="plan-header">
+          <h4>Basic</h4>
+          <div class="plan-price">
+            <span class="price-amount">KES 3,900</span>
+            <span class="price-period">/month</span>
+          </div>
+        </div>
+        <div class="plan-features">
+          <div class="plan-feature">⚡ 50 Mbps Speed</div>
+          <div class="plan-feature">📊 100 GB Data</div>
+          <div class="plan-feature">🛡️ Basic Support</div>
+          <div class="plan-feature">📱 1 Device</div>
+        </div>
+        <div class="plan-action">
+          <a
+            href="{% url 'packages:plans_list' %}"
+            class="btn btn-outline-primary w-100"
+            >Choose Plan</a
+          >
+        </div>
+      </div>
     </div>
 
-    <div class="row g-4 mb-5">
-        <!-- Basic Plan -->
-        <div class="col-md-4">
-            <div class="plan-card">
-                <div class="plan-header">
-                    <h4>Basic</h4>
-                    <div class="plan-price">
-                        <span class="price-amount">$29.99</span>
-                        <span class="price-period">/month</span>
-                    </div>
-                </div>
-                <div class="plan-features">
-                    <div class="plan-feature">⚡ 50 Mbps Speed</div>
-                    <div class="plan-feature">📊 100 GB Data</div>
-                    <div class="plan-feature">🛡️ Basic Support</div>
-                    <div class="plan-feature">📱 1 Device</div>
-                </div>
-                <div class="plan-action">
-                    <a href="{% url 'packages:plans_list' %}" class="btn btn-outline-primary w-100">Choose Plan</a>
-                </div>
-            </div>
+    <!-- Standard Plan (Featured) -->
+    <div class="col-md-4">
+      <div class="plan-card featured-plan">
+        <div class="featured-badge">Most Popular</div>
+        <div class="plan-header">
+          <h4>Standard</h4>
+          <div class="plan-price">
+            <span class="price-amount">KES 6,500</span>
+            <span class="price-period">/month</span>
+          </div>
         </div>
-
-        <!-- Standard Plan (Featured) -->
-        <div class="col-md-4">
-            <div class="plan-card featured-plan">
-                <div class="featured-badge">Most Popular</div>
-                <div class="plan-header">
-                    <h4>Standard</h4>
-                    <div class="plan-price">
-                        <span class="price-amount">$49.99</span>
-                        <span class="price-period">/month</span>
-                    </div>
-                </div>
-                <div class="plan-features">
-                    <div class="plan-feature">⚡ 100 Mbps Speed</div>
-                    <div class="plan-feature">📊 Unlimited Data</div>
-                    <div class="plan-feature">🛡️ Priority Support</div>
-                    <div class="plan-feature">📱 5 Devices</div>
-                </div>
-                <div class="plan-action">
-                    <a href="{% url 'packages:plans_list' %}" class="btn btn-primary w-100">Choose Plan</a>
-                </div>
-            </div>
+        <div class="plan-features">
+          <div class="plan-feature">⚡ 100 Mbps Speed</div>
+          <div class="plan-feature">📊 Unlimited Data</div>
+          <div class="plan-feature">🛡️ Priority Support</div>
+          <div class="plan-feature">📱 5 Devices</div>
         </div>
-
-        <!-- Premium Plan -->
-        <div class="col-md-4">
-            <div class="plan-card">
-                <div class="plan-header">
-                    <h4>Premium</h4>
-                    <div class="plan-price">
-                        <span class="price-amount">$79.99</span>
-                        <span class="price-period">/month</span>
-                    </div>
-                </div>
-                <div class="plan-features">
-                    <div class="plan-feature">⚡ 500 Mbps Speed</div>
-                    <div class="plan-feature">📊 Unlimited Data</div>
-                    <div class="plan-feature">🛡️ 24/7 VIP Support</div>
-                    <div class="plan-feature">📱 Unlimited Devices</div>
-                </div>
-                <div class="plan-action">
-                    <a href="{% url 'packages:plans_list' %}" class="btn btn-outline-primary w-100">Choose Plan</a>
-                </div>
-            </div>
+        <div class="plan-action">
+          <a
+            href="{% url 'packages:plans_list' %}"
+            class="btn btn-primary w-100"
+            >Choose Plan</a
+          >
         </div>
+      </div>
     </div>
 
-    <!-- CTA Section -->
-    <div class="cta-section text-center py-5">
-        <h2 class="mb-3">Ready to Get Started?</h2>
-        <p class="lead mb-4">Join thousands of satisfied customers enjoying fast, reliable internet</p>
-        {% if not user.is_authenticated %}
-        <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">
-            Create Account Now
-        </a>
-        {% else %}
-        <a href="{% url 'packages:plans_list' %}" class="btn btn-primary btn-lg">
-            Browse All Plans
-        </a>
-        {% endif %}
+    <!-- Premium Plan -->
+    <div class="col-md-4">
+      <div class="plan-card">
+        <div class="plan-header">
+          <h4>Premium</h4>
+          <div class="plan-price">
+            <span class="price-amount">KES 10,400</span>
+            <span class="price-period">/month</span>
+          </div>
+        </div>
+        <div class="plan-features">
+          <div class="plan-feature">⚡ 500 Mbps Speed</div>
+          <div class="plan-feature">📊 Unlimited Data</div>
+          <div class="plan-feature">🛡️ 24/7 VIP Support</div>
+          <div class="plan-feature">📱 Unlimited Devices</div>
+        </div>
+        <div class="plan-action">
+          <a
+            href="{% url 'packages:plans_list' %}"
+            class="btn btn-outline-primary w-100"
+            >Choose Plan</a
+          >
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="cta-section text-center py-5">
+    <h2 class="mb-3">Ready to Get Started?</h2>
+    <p class="lead mb-4">
+      Join thousands of satisfied customers enjoying fast, reliable internet
+    </p>
+    {% if not user.is_authenticated %}
+    <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">
+      Create Account Now
+    </a>
+    {% else %}
+    <a href="{% url 'packages:plans_list' %}" class="btn btn-primary btn-lg">
+      Browse All Plans
+    </a>
+    {% endif %}
+  </div>
 </div>
 
 <!-- Contact Section -->
 <div id="contact" class="bg-light py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 mb-4 mb-md-0">
-                <h3 class="mb-3">Get in Touch</h3>
-                <div class="contact-info">
-                    <div class="contact-item mb-3">
-                        <i class="bi bi-telephone-fill text-primary"></i>
-                        <span class="ms-2"><strong>Phone:</strong> 1-800-SPEED-NET</span>
-                    </div>
-                    <div class="contact-item mb-3">
-                        <i class="bi bi-envelope-fill text-primary"></i>
-                        <span class="ms-2"><strong>Email:</strong> support@speednet.com</span>
-                    </div>
-                    <div class="contact-item mb-3">
-                        <i class="bi bi-clock-fill text-primary"></i>
-                        <span class="ms-2"><strong>Hours:</strong> 24/7 Available</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <h3 class="mb-3">Quick Message</h3>
-                <form>
-                    <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="Your Name" required>
-                    </div>
-                    <div class="mb-3">
-                        <input type="email" class="form-control" placeholder="Your Email" required>
-                    </div>
-                    <div class="mb-3">
-                        <textarea class="form-control" rows="3" placeholder="Your Message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </form>
-            </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 mb-4 mb-md-0">
+        <h3 class="mb-3">Get in Touch</h3>
+        <div class="contact-info">
+          <div class="contact-item mb-3">
+            <i class="bi bi-telephone-fill text-primary"></i>
+            <span class="ms-2"><strong>Phone:</strong> 1-800-SPEED-NET</span>
+          </div>
+          <div class="contact-item mb-3">
+            <i class="bi bi-envelope-fill text-primary"></i>
+            <span class="ms-2"
+              ><strong>Email:</strong> support@speednet.com</span
+            >
+          </div>
+          <div class="contact-item mb-3">
+            <i class="bi bi-clock-fill text-primary"></i>
+            <span class="ms-2"><strong>Hours:</strong> 24/7 Available</span>
+          </div>
         </div>
+      </div>
+      <div class="col-md-6">
+        <h3 class="mb-3">Quick Message</h3>
+        <form>
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Your Name"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Your Email"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <textarea
+              class="form-control"
+              rows="3"
+              placeholder="Your Message"
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 
 <style>
-/* Hero Section Styling */
-.hero-section {
+  /* Hero Section Styling */
+  .hero-section {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     min-height: 600px;
@@ -222,112 +268,117 @@
     border-radius: 12px;
     margin: 20px auto;
     max-width: 1200px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
 
-.hero-header {
-    border-bottom: 2px solid rgba(255,255,255,0.3);
-}
+  .hero-header {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  }
 
-.home-icon {
+  .home-icon {
     font-size: 1.5rem;
-}
+  }
 
-.brand-text {
+  .brand-text {
     font-weight: 700;
     font-size: 1.5rem;
-}
+  }
 
-.auth-buttons .btn {
+  .auth-buttons .btn {
     border-radius: 25px;
     padding: 8px 24px;
     font-weight: 600;
-}
+  }
 
-.hero-divider {
-    border-color: rgba(255,255,255,0.3);
+  .hero-divider {
+    border-color: rgba(255, 255, 255, 0.3);
     margin: 0;
-}
+  }
 
-.hero-content {
+  .hero-content {
     padding: 60px 20px !important;
-}
+  }
 
-.hero-icon {
+  .hero-icon {
     font-size: 4rem;
     animation: pulse 2s ease-in-out infinite;
-}
+  }
 
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
 
-.hero-title {
+  .hero-title {
     font-size: 3rem;
     font-weight: 800;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-}
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
 
-.hero-subtitle {
+  .hero-subtitle {
     font-size: 1.5rem;
     font-weight: 300;
     opacity: 0.95;
-}
+  }
 
-.btn-hero {
+  .btn-hero {
     padding: 12px 32px;
     font-size: 1.1rem;
     font-weight: 600;
     border-radius: 30px;
     transition: all 0.3s ease;
-}
+  }
 
-.btn-hero:hover {
+  .btn-hero:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
 
-.features-grid {
+  .features-grid {
     padding: 40px 20px !important;
-}
+  }
 
-.features-title {
+  .features-title {
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 30px !important;
-}
+  }
 
-.feature-item {
-    background: rgba(255,255,255,0.1);
-    border: 2px solid rgba(255,255,255,0.3);
+  .feature-item {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     padding: 20px;
     text-align: center;
     transition: all 0.3s ease;
-}
+  }
 
-.feature-item:hover {
-    background: rgba(255,255,255,0.2);
+  .feature-item:hover {
+    background: rgba(255, 255, 255, 0.2);
     transform: translateY(-5px);
-}
+  }
 
-.check-icon {
+  .check-icon {
     font-size: 2rem;
     font-weight: bold;
     color: #4ade80;
     display: block;
     margin-bottom: 10px;
-}
+  }
 
-.feature-text {
+  .feature-text {
     font-size: 1.1rem;
     font-weight: 600;
     display: block;
-}
+  }
 
-/* Plan Cards */
-.plan-card {
+  /* Plan Cards */
+  .plan-card {
     background: white;
     border: 2px solid #e5e7eb;
     border-radius: 12px;
@@ -335,21 +386,21 @@
     transition: all 0.3s ease;
     height: 100%;
     position: relative;
-}
+  }
 
-.plan-card:hover {
+  .plan-card:hover {
     border-color: #667eea;
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
-}
+  }
 
-.featured-plan {
+  .featured-plan {
     border: 3px solid #667eea;
     background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
     transform: scale(1.05);
-}
+  }
 
-.featured-badge {
+  .featured-badge {
     position: absolute;
     top: -15px;
     left: 50%;
@@ -360,86 +411,86 @@
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 700;
-}
+  }
 
-.plan-header {
+  .plan-header {
     text-align: center;
     border-bottom: 2px solid #e5e7eb;
     padding-bottom: 20px;
     margin-bottom: 20px;
-}
+  }
 
-.plan-header h4 {
+  .plan-header h4 {
     font-size: 1.8rem;
     font-weight: 700;
     color: #1f2937;
     margin-bottom: 15px;
-}
+  }
 
-.plan-price {
+  .plan-price {
     margin-bottom: 0;
-}
+  }
 
-.price-amount {
+  .price-amount {
     font-size: 2.5rem;
     font-weight: 800;
     color: #667eea;
-}
+  }
 
-.price-period {
+  .price-period {
     font-size: 1rem;
     color: #6b7280;
-}
+  }
 
-.plan-features {
+  .plan-features {
     margin-bottom: 30px;
-}
+  }
 
-.plan-feature {
+  .plan-feature {
     padding: 12px 0;
     border-bottom: 1px solid #f3f4f6;
     font-size: 1rem;
     color: #4b5563;
-}
+  }
 
-.plan-feature:last-child {
+  .plan-feature:last-child {
     border-bottom: none;
-}
+  }
 
-.section-title {
+  .section-title {
     font-size: 2.5rem;
     font-weight: 800;
     color: #1f2937;
-}
+  }
 
-.cta-section {
+  .cta-section {
     background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
     border-radius: 12px;
     border: 2px solid #e5e7eb;
-}
+  }
 
-.contact-item {
+  .contact-item {
     font-size: 1.1rem;
-}
+  }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+  /* Responsive Design */
+  @media (max-width: 768px) {
     .hero-title {
-        font-size: 2rem;
+      font-size: 2rem;
     }
-    
+
     .hero-subtitle {
-        font-size: 1.2rem;
+      font-size: 1.2rem;
     }
-    
+
     .btn-hero {
-        padding: 10px 24px;
-        font-size: 1rem;
+      padding: 10px 24px;
+      font-size: 1rem;
     }
-    
+
     .featured-plan {
-        transform: scale(1);
+      transform: scale(1);
     }
-}
+  }
 </style>
 {% endblock %}

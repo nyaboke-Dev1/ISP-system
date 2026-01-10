@@ -5,8 +5,8 @@ from .models import Payment
 
 @receiver(post_save, sender=Payment)
 def activate_subscription(sender, instance, created, **kwargs):
-    if instance.status == 'completed':
+    if instance.status == "completed":
         subscription = instance.subscription
-        if not subscription.is_active:
-            subscription.is_active = True
+        if subscription.status != "active":
+            subscription.status = "active"
             subscription.save()

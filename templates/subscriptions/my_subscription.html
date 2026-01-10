@@ -1,0 +1,210 @@
+{% extends 'base.html' %} {% block title %}My Subscription - SpeedNet ISP{%
+endblock %} {% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">My Subscription</h1>
+    </div>
+  </div>
+
+  <!-- Active Subscription -->
+  {% if active_subscription %}
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card border-success">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-check-circle"></i> Active Subscription
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h4>{{ active_subscription.package.name }}</h4>
+              <p class="text-muted mb-1">
+                {{ active_subscription.package.speed_display }}
+              </p>
+              <p class="mb-1">
+                <strong
+                  >KES {{ active_subscription.package.price }}/month</strong
+                >
+              </p>
+              <p class="mb-0">
+                Data cap: {{ active_subscription.package.data_cap_display }}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p class="mb-1">
+                <strong>Status:</strong>
+                <span class="badge bg-success"
+                  >{{ active_subscription.get_status_display }}</span
+                >
+              </p>
+              <p class="mb-1">
+                <strong>Start Date:</strong> {{
+                active_subscription.start_date|date:"M d, Y" }}
+              </p>
+              {% if active_subscription.end_date %}
+              <p class="mb-1">
+                <strong>End Date:</strong> {{
+                active_subscription.end_date|date:"M d, Y" }}
+              </p>
+              {% endif %}
+              <p class="mb-0">
+                <strong>Next Billing:</strong> {{
+                active_subscription.next_billing_date|date:"M d, Y" }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="btn-group">
+            <a
+              href="{% url 'subscriptions:upgrade_plan' active_subscription.package.id %}"
+              class="btn btn-outline-primary"
+            >
+              <i class="bi bi-arrow-up-circle"></i> Upgrade Plan
+            </a>
+            <a
+              href="{% url 'subscriptions:cancel' %}"
+              class="btn btn-outline-danger"
+            >
+              <i class="bi bi-x-circle"></i> Cancel Subscription
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="alert alert-info">
+        <h5><i class="bi bi-info-circle"></i> No Active Subscription</h5>
+        <p>
+          You don't have an active subscription. Choose a plan to get started!
+        </p>
+        <a href="{% url 'packages:plans_list' %}" class="btn btn-primary"
+          >Browse Plans</a
+        >
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Subscription History -->
+  {% if subscriptions %}
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-clock-history"></i> Subscription History
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>Status</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for subscription in subscriptions %}
+                <tr>
+                  <td>
+                    <strong>{{ subscription.package.name }}</strong><br />
+                    <small class="text-muted"
+                      >{{ subscription.package.speed_display }}</small
+                    >
+                  </td>
+                  <td>
+                    <span
+                      class="badge {% if subscription.status == 'active' %}bg-success{% elif subscription.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}"
+                    >
+                      {{ subscription.get_status_display }}
+                    </span>
+                  </td>
+                  <td>{{ subscription.start_date|date:"M d, Y" }}</td>
+                  <td>
+                    {% if subscription.end_date %} {{
+                    subscription.end_date|date:"M d, Y" }} {% else %}
+                    <span class="text-muted">-</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if subscription.status == 'active' %}
+                    <a
+                      href="{% url 'subscriptions:upgrade_plan' subscription.package.id %}"
+                      class="btn btn-sm btn-outline-primary"
+                      >Upgrade</a
+                    >
+                    <a
+                      href="{% url 'subscriptions:cancel' %}"
+                      class="btn btn-sm btn-outline-danger"
+                      >Cancel</a
+                    >
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Available Plans for Upgrade -->
+  {% if active_subscription and available_plans %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-arrow-up-circle"></i> Available Upgrades
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            {% for plan in available_plans %} {% if plan.price >
+            active_subscription.package.price %}
+            <div class="col-md-4">
+              <div class="card h-100 border-primary">
+                <div class="card-body text-center">
+                  <h6>{{ plan.name }}</h6>
+                  <p class="text-primary mb-1">KES {{ plan.price }}/month</p>
+                  <small class="text-muted">{{ plan.speed_display }}</small>
+                </div>
+                <div class="card-footer bg-transparent">
+                  <a
+                    href="{% url 'subscriptions:upgrade_plan' plan.id %}"
+                    class="btn btn-primary btn-sm w-100"
+                  >
+                    Upgrade
+                  </a>
+                </div>
+              </div>
+            </div>
+            {% endif %} {% empty %}
+            <div class="col-12">
+              <p class="text-muted text-center">
+                No upgrade options available.
+              </p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

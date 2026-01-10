@@ -1,0 +1,122 @@
+{% extends 'base.html' %} {% block title %}Payment Details - SpeedNet ISP{%
+endblock %} {% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0"><i class="bi bi-receipt"></i> Payment Details</h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>Payment Information</h5>
+              <table class="table table-borderless">
+                <tr>
+                  <td><strong>Payment ID:</strong></td>
+                  <td>{{ payment.id }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Date:</strong></td>
+                  <td>{{ payment.timestamp|date:"M d, Y H:i" }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Amount:</strong></td>
+                  <td>
+                    <strong class="text-success"
+                      >KES {{ payment.amount }}</strong
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Method:</strong></td>
+                  <td>{{ payment.get_method_display }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Status:</strong></td>
+                  <td>
+                    <span
+                      class="badge {% if payment.status == 'completed' %}bg-success{% elif payment.status == 'pending' %}bg-warning{% else %}bg-danger{% endif %}"
+                    >
+                      {{ payment.get_status_display }}
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-md-6">
+              {% if payment.subscription %}
+              <h5>Subscription Details</h5>
+              <table class="table table-borderless">
+                <tr>
+                  <td><strong>Plan:</strong></td>
+                  <td>{{ payment.subscription.package.name }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Speed:</strong></td>
+                  <td>{{ payment.subscription.package.speed_display }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Status:</strong></td>
+                  <td>
+                    <span
+                      class="badge {% if payment.subscription.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}"
+                    >
+                      {{ payment.subscription.get_status_display }}
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Billing Period:</strong></td>
+                  <td>
+                    {{ payment.subscription.start_date|date:"M d, Y" }} - {{
+                    payment.subscription.end_date|date:"M d,
+                    Y"|default:"Ongoing" }}
+                  </td>
+                </tr>
+              </table>
+              {% endif %}
+            </div>
+          </div>
+
+          {% if payment.status == 'completed' %}
+          <div class="alert alert-success mt-3">
+            <i class="bi bi-check-circle"></i>
+            <strong>Payment Successful!</strong> Your subscription has been
+            activated.
+          </div>
+          {% elif payment.status == 'pending' %}
+          <div class="alert alert-warning mt-3">
+            <i class="bi bi-clock"></i>
+            <strong>Payment Pending</strong> We're processing your payment. This
+            may take a few minutes.
+          </div>
+          {% elif payment.status == 'failed' %}
+          <div class="alert alert-danger mt-3">
+            <i class="bi bi-x-circle"></i>
+            <strong>Payment Failed</strong> There was an issue processing your
+            payment. Please try again.
+          </div>
+          {% endif %}
+        </div>
+        <div class="card-footer">
+          <a
+            href="{% url 'payments:invoices_list' %}"
+            class="btn btn-outline-secondary"
+          >
+            <i class="bi bi-arrow-left"></i> Back to Payments
+          </a>
+          {% if payment.status == 'failed' %}
+          <a
+            href="{% url 'payments:pay_invoice' payment.subscription.id %}"
+            class="btn btn-primary ms-2"
+          >
+            <i class="bi bi-credit-card"></i> Retry Payment
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
